@@ -15,3 +15,16 @@ describe("GET /api", () => {
       });
   });
 });
+
+describe('Non-endpoint request', () => {
+  
+  test('should return a status(404) and error message on any atempted endpoint that does not exist', () => {
+    
+    return request(app)
+    .get('/api/notanend')
+    .expect(404)
+    .then(({body: {msg}}) => {
+      expect(msg).toBe('That endpoint does not exist')
+    })
+  });
+});
