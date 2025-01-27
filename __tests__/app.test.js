@@ -35,7 +35,7 @@ describe("GET /api", () => {
 
 describe('GET /api/topics', () => {
   
-  test('should respond with status 200 and an obeject with all the topics from the database', () => {
+  test('should respond with status 200 and an array with all the topics from the database', () => {
     return request(app)
     .get('/api/topics')
     .expect(200)
@@ -69,3 +69,22 @@ describe('GET /api/topics', () => {
   });
 });
 
+describe('GET /api/articles/:article_id', () => {
+  
+  test('should respond with status 200 and an object of the article requested', () => {
+    return request(app)
+    .get('/api/articles/4')
+    .expect(200)
+    .then(({ body: { article }}) => {
+
+      expect(article).toHaveProperty('author')
+      expect(article).toHaveProperty('title')
+      expect(article).toHaveProperty('article_id')
+      expect(article).toHaveProperty('body')
+      expect(article).toHaveProperty('topic')
+      expect(article).toHaveProperty('created_at')
+      expect(article).toHaveProperty('votes')
+      expect(article).toHaveProperty('article_img_url')
+    })
+  });
+});
