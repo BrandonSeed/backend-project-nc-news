@@ -1,7 +1,7 @@
 const express = require('express')
 const app = express()
 const { getApi, getTopics, getArticleById } = require('./contollers/index')
-const { noEndpointError } = require('./serverErrors')
+const { noEndpointError, requestErrors } = require('./serverErrors')
 
 app.use(express.json())
 
@@ -17,5 +17,6 @@ app.get('/*', (req ,res, next) => {
 })
 
 app.use(noEndpointError)
+app.use(requestErrors)
 
 module.exports = app
