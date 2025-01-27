@@ -67,4 +67,25 @@ describe('GET /api/articles/:article_id', () => {
       expect(article).toHaveProperty('article_img_url')
     })
   });
+
+  describe('error tests', () => { //don't forget to add to endpoints.json
+    
+    test('should respond with status 404 and msg when a vaild but non-existant id is entered', () => {
+      return request(app)
+      .get('/api/articles/999')
+      .expect(404)
+      .then(({body: {msg}}) =>{
+        expect(msg).toBe('That ID has no article')
+      })
+    });
+
+    test('should respond with status 400 and msg when a non-vaild id is entered', () => {
+      return request(app)
+      .get('/api/articles/notAnId')
+      .expect(400)
+      .then(({body: {msg}}) =>{
+        expect(msg).toBe('Bad request')
+      })
+    });
+  });
 });
