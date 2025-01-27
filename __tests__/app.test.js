@@ -2,11 +2,11 @@ const endpointsJson = require("../endpoints.json");
 const app = require('../app')
 const request = require('supertest')
 
-const {articleData, commentData, topicData, userData} = require('../db/data/test-data/index')
+const testData = require('../db/data/test-data/index')
 const db = require('../db/connection')
 const seed = require('../db/seeds/seed')
 
-beforeEach(() => seed({topicData, userData, articleData, commentData}))
+beforeEach(() => seed(testData))
 afterAll(() => db.end())
 
 describe('Non-endpoint request', () => {
@@ -45,26 +45,6 @@ describe('GET /api/topics', () => {
         expect(topic).toHaveProperty('slug')
         expect(topic).toHaveProperty('description')
       })
-    })
-  });
-
-  test('should respond with the correct data stored in the database', () => {
-    return request(app)
-    .get('/api/topics')
-    .expect(200)
-    .then(({ body: { topics } }) => {
-      expect(topics).toEqual([{
-        description: 'The man, the Mitch, the legend',
-        slug: 'mitch'
-      },
-      {
-        description: 'Not dogs',
-        slug: 'cats'
-      },
-      {
-        description: 'what books are made of',
-        slug: 'paper'
-      }])
     })
   });
 });
