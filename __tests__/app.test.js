@@ -111,7 +111,9 @@ describe('GET /api/articles', () => {
     .get('/api/articles')
     .expect(200)
     .then(({ body: { articles }}) => {
+      expect(articles).toHaveLength(13)
       articles.forEach((article) => {
+
         expect(article).toHaveProperty('author')
         expect(article).toHaveProperty('title')
         expect(article).toHaveProperty('article_id')
@@ -135,5 +137,40 @@ describe('GET /api/articles', () => {
 
       expect(articles).toBeSorted({descending: true, key: 'created_at'})
     })
+  });
+});
+
+describe('GET /api/articles/:article_id/comments', () => {
+  
+  test('should respond with status 200 and an array of comment objects', () => {
+    return request(app)
+    .get('/api/articles/1/comments')
+    .expect(200)
+    .then(({ body: { comments }}) => {
+      expect(comments).toHaveLength(11)
+      comments.forEach((comment) => {
+
+        expect(comment).toHaveProperty("comment_id")
+        expect(comment).toHaveProperty("votes")
+        expect(comment).toHaveProperty("created_at")
+        expect(comment).toHaveProperty("author")
+        expect(comment).toHaveProperty("body")
+        expect(comment).toHaveProperty("article_id")
+
+        expect(comment).toMatchObject({
+          comment_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          article_id: expect.any(Number)
+        })
+      })
+    })
+  });
+
+  describe('error test', () => {
+    //test for 400 on non number id
+    //test for 404 on number but not present remember: can be no length as to mean no comments 
   });
 });
