@@ -82,6 +82,25 @@ describe('GET /api/articles/:article_id', () => {
     })
   });
 
+  test('should respond with correct object requested', () => {
+    return request(app)
+    .get('/api/articles/3')
+    .expect(200)
+    .then(({ body: { article }}) => {
+      expect(article).toMatchObject({
+        title: "Eight pug gifs that remind me of mitch",
+        topic: "mitch",
+        author: "icellusedkars",
+        body: "some gifs",
+        created_at: "2020-11-03T09:12:00.000Z",
+        article_img_url:
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        article_id: 3,
+        votes: 0
+      })
+    })
+  });
+
   describe('error tests', () => { 
     
     test('should respond with status 404 and msg when a vaild but non-existant id is entered', () => {
@@ -111,7 +130,9 @@ describe('GET /api/articles', () => {
     .get('/api/articles')
     .expect(200)
     .then(({ body: { articles }}) => {
+      expect(articles).toHaveLength(13)
       articles.forEach((article) => {
+
         expect(article).toHaveProperty('author')
         expect(article).toHaveProperty('title')
         expect(article).toHaveProperty('article_id')
@@ -135,5 +156,67 @@ describe('GET /api/articles', () => {
 
       expect(articles).toBeSorted({descending: true, key: 'created_at'})
     })
+  });
+});
+
+describe('GET /api/articles/:article_id/comments', () => {
+  
+  test('should respond with status 200 and an array of comment objects', () => {
+    return request(app)
+    .get('/api/articles/1/comments')
+    .expect(200)
+    .then(({ body: { comments }}) => {
+      expect(comments).toHaveLength(11)
+      comments.forEach((comment) => {
+
+        expect(comment).toHaveProperty("comment_id")
+        expect(comment).toHaveProperty("votes")
+        expect(comment).toHaveProperty("created_at")
+        expect(comment).toHaveProperty("author")
+        expect(comment).toHaveProperty("body")
+        expect(comment).toHaveProperty("article_id")
+
+        expect(comment).toMatchObject({
+          comment_id: expect.any(Number),
+          votes: expect.any(Number),
+          created_at: expect.any(String),
+          author: expect.any(String),
+          body: expect.any(String),
+          article_id: expect.any(Number)
+        })
+      })
+
+      expect(comments).toBeSorted({ descending: true, key: "created_at"})
+    })
+  });
+
+  test('should respond with status 200 and an empty array if the article has no comments', () => {
+    return request(app)
+    .get('/api/articles/4/comments')
+    .expect(200)
+    .then(({ body: { comments }}) => {
+      expect(comments).toEqual([])
+    })
+  });
+
+  describe('error test', () => {
+
+    test('should respond with status 400 and msg when a non-vaild id is entered', () => {
+      return request(app)
+      .get('/api/articles/notAnId/comments')
+      .expect(400)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("Bad request")
+      })
+    });
+
+    test('should respond with status 404 and msg when a vaild non-existant id is entered', () => {
+      return request(app)
+      .get('/api/articles/9999/comments')
+      .expect(404)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe('That ID has no article')
+      })
+    });
   });
 });
