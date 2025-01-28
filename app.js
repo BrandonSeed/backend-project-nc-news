@@ -5,7 +5,8 @@ const {
     getTopics, 
     getArticleById, 
     getArticles,
-    getCommentsByArticleId 
+    getCommentsByArticleId, 
+    postCommentByArticleId 
 } = require('./contollers/index')
 const { noEndpointError, requestErrors } = require('./serverErrors')
 
@@ -21,6 +22,8 @@ app.get('/api/articles/:article_id', getArticleById)
 app.get('/api/articles', getArticles)
 
 app.get('/api/articles/:article_id/comments', getCommentsByArticleId)
+
+app.post('/api/articles/:article_id/comments', postCommentByArticleId)
 
 app.get('/*', (req ,res, next) => {
     next({status: 404, msg: "That endpoint does not exist"})
