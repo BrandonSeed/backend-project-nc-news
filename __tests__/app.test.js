@@ -220,3 +220,54 @@ describe('GET /api/articles/:article_id/comments', () => {
     });
   });
 });
+
+describe.only('POST /api/articles/:article_id/comments', () => {
+  test('should repond with status 201 and posted comment object when a username and body are entered', () => {
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send({
+      username: 'lurker',
+      body: 'first comment here'
+    })
+    .expect(201)
+    .then(({ body: { comment }}) => {
+      expect(comment).toHaveProperty("comment_id")
+      expect(comment).toHaveProperty("votes")
+      expect(comment).toHaveProperty("created_at")
+      expect(comment).toHaveProperty("author")
+      expect(comment).toHaveProperty("body")
+      expect(comment).toHaveProperty("article_id")
+
+      expect(comment).toMatchObject({
+        comment_id: expect.any(Number),
+        votes: expect.any(Number),
+        created_at: expect.any(String),
+        author: expect.any(String),
+        body: expect.any(String),
+        article_id: expect.any(Number)
+        })
+    })
+  });
+
+  test('should respond with the correct comment object', () => {
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send({
+      username: 'lurker',
+      body: 'first comment here'
+    })
+    .expect(201)
+    .then(({ body: { comment }}) => {
+      expect(comment).toMatchObject({
+        author: 'lurker',
+        body: 'first comment here',
+        article_id: 4,
+        comment_id: 19,
+        votes: 0,
+        created_at: expect.any(String),
+      })
+    })
+  });
+});
+
+//test to make user post 404s work too
