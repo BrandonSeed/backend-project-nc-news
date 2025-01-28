@@ -277,6 +277,45 @@ describe('POST /api/articles/:article_id/comments', () => {
       })
     })
   });
+
+  describe('error tests', () => {
+    test('should repond with status 400 and msg when a non-vaild id is entered', () => {
+      return request(app)
+      .post('/api/articles/notAnId/comments')
+      .send({
+        username: 'lurker',
+        body: 'first comment here'
+      })
+      .expect(400)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("Bad request")
+      })
+    });
+
+    test('should respond with status 404 and msg when a valid non-existant id is entered', () => {
+      return request(app)
+      .post('/api/articles/999/comments')
+      .send({
+        username: 'lurker',
+        body: 'first comment here'
+      })
+      .expect(404)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("That ID has no article")
+      })
+    });
+
+    test('should respond with status 400 and msg when input is invalid', () => {
+      return request(app)
+      .post('/api/articles/4/comments')
+      .send({
+        username: 'lurker',
+      })
+      .expect(400)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("Bad request, input invalid")
+      })
+    });
+  });
 });
 
-//test to make user post 404s work too
