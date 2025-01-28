@@ -1,6 +1,6 @@
 const getApi = require('./getApi')
 const getTopics = require('./getTopics')
-const { getArticleById } = require('./getArticles')
+const { getArticleById, getArticles } = require('./getArticles')
 
 
-module.exports = { getApi, getTopics, getArticleById }
+module.exports = { getApi, getTopics, getArticleById, getArticles }

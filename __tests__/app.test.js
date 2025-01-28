@@ -44,6 +44,10 @@ describe('GET /api/topics', () => {
       topics.forEach((topic) => {
         expect(topic).toHaveProperty('slug')
         expect(topic).toHaveProperty('description')
+        expect(topic).toMatchObject({
+          slug: expect.any(String),
+          description: expect.any(String)
+        })
       })
     })
   });
@@ -56,7 +60,6 @@ describe('GET /api/articles/:article_id', () => {
     .get('/api/articles/4')
     .expect(200)
     .then(({ body: { article }}) => {
-
       expect(article).toHaveProperty('author')
       expect(article).toHaveProperty('title')
       expect(article).toHaveProperty('article_id')
@@ -65,10 +68,21 @@ describe('GET /api/articles/:article_id', () => {
       expect(article).toHaveProperty('created_at')
       expect(article).toHaveProperty('votes')
       expect(article).toHaveProperty('article_img_url')
+
+      expect(article).toMatchObject({
+        author: expect.any(String),
+        title: expect.any(String),
+        article_id: expect.any(Number),
+        body: expect.any(String),
+        topic: expect.any(String),
+        created_at: expect.any(String),
+        votes: expect.any(Number),
+        article_img_url: expect.any(String)
+      })
     })
   });
 
-  describe('error tests', () => { //don't forget to add to endpoints.json
+  describe('error tests', () => { 
     
     test('should respond with status 404 and msg when a vaild but non-existant id is entered', () => {
       return request(app)
@@ -87,5 +101,39 @@ describe('GET /api/articles/:article_id', () => {
         expect(msg).toBe('Bad request')
       })
     });
+  });
+});
+
+describe('GET /api/articles', () => {
+  
+  test('should respond with status 200 and array of objects of the articles', () => {
+    return request(app)
+    .get('/api/articles')
+    .expect(200)
+    .then(({ body: { articles }}) => {
+      articles.forEach((article) => {
+        expect(article).toHaveProperty('author')
+        expect(article).toHaveProperty('title')
+        expect(article).toHaveProperty('article_id')
+        expect(article).toHaveProperty('topic')
+        expect(article).toHaveProperty('created_at')
+        expect(article).toHaveProperty('votes')
+        expect(article).toHaveProperty('article_img_url')
+        expect(article).toHaveProperty('comment_count')
+
+        expect(article).toMatchObject({
+          author: expect.any(String),
+          title: expect.any(String),
+          article_id: expect.any(Number),
+          topic: expect.any(String),
+          created_at: expect.any(String),
+          votes: expect.any(Number),
+          article_img_url: expect.any(String),
+          comment_count: expect.any(String)
+        })
+      })
+
+      expect(articles).toBeSorted({descending: true, key: 'created_at'})
+    })
   });
 });
