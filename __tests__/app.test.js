@@ -171,16 +171,32 @@ describe('GET /api/articles/:article_id/comments', () => {
     })
   });
 
-  describe('error test', () => {
-    //test for 400 on non number id
-    //test for 404 on number but not present remember: can be no length as to mean no comments 
+  test('should respond with status 200 and an empty array if the article has no comments', () => {
+    return request(app)
+    .get('/api/articles/4/comments')
+    .expect(200)
+    .then(({ body: { comments }}) => {
+      expect(comments).toEqual([])
+    })
+  });
 
-    xtest('should respond with status 400 and msg when a non-vaild id is entered', () => {
+  describe('error test', () => {
+
+    test('should respond with status 400 and msg when a non-vaild id is entered', () => {
       return request(app)
       .get('/api/articles/notAnId/comments')
       .expect(400)
       .then(({ body: { msg }}) => {
         expect(msg).toBe("Bad request")
+      })
+    });
+
+    test('should respond with status 404 and msg when a vaild non-existant id is entered', () => {
+      return request(app)
+      .get('/api/articles/9999/comments')
+      .expect(404)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe('That ID has no article')
       })
     });
   });
