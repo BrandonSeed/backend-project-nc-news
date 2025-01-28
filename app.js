@@ -28,6 +28,9 @@ app.post('/api/articles/:article_id/comments', postCommentByArticleId)
 app.get('/*', (req ,res, next) => {
     next({status: 404, msg: "That endpoint does not exist"})
 })
+app.post('/*', (req ,res, next) => {
+    next({status: 404, msg: "That endpoint does not exist"})
+})
 
 app.use(noEndpointError)
 app.use(requestErrors)

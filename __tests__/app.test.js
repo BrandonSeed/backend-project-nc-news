@@ -11,10 +11,19 @@ afterAll(() => db.end())
 
 describe('Non-endpoint request', () => {
   
-  test('should return a status(404) and error message on any atempted endpoint that does not exist', () => {
+  test('should respond with status(404) and error message on any atempted GET endpoints that do not exist', () => {
     
     return request(app)
     .get('/api/notanend')
+    .expect(404)
+    .then(({body: {msg}}) => {
+      expect(msg).toBe('That endpoint does not exist')
+    })
+  });
+
+  test('should respond with status(404) and error message on atemped POST endpoints that do not exist', () => {
+    return request(app)
+    .post('/api/notanend')
     .expect(404)
     .then(({body: {msg}}) => {
       expect(msg).toBe('That endpoint does not exist')
@@ -221,7 +230,7 @@ describe('GET /api/articles/:article_id/comments', () => {
   });
 });
 
-describe.only('POST /api/articles/:article_id/comments', () => {
+describe('POST /api/articles/:article_id/comments', () => {
   test('should repond with status 201 and posted comment object when a username and body are entered', () => {
     return request(app)
     .post('/api/articles/4/comments')
