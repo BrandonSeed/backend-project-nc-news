@@ -166,11 +166,22 @@ describe('GET /api/articles/:article_id/comments', () => {
           article_id: expect.any(Number)
         })
       })
+
+      expect(comments).toBeSorted({ descending: true, key: "created_at"})
     })
   });
 
   describe('error test', () => {
     //test for 400 on non number id
     //test for 404 on number but not present remember: can be no length as to mean no comments 
+
+    xtest('should respond with status 400 and msg when a non-vaild id is entered', () => {
+      return request(app)
+      .get('/api/articles/notAnId/comments')
+      .expect(400)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("Bad request")
+      })
+    });
   });
 });
