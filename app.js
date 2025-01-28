@@ -8,7 +8,7 @@ const {
     getCommentsByArticleId, 
     postCommentByArticleId 
 } = require('./contollers/index')
-const { noEndpointError, requestErrors } = require('./serverErrors')
+const { noEndpointError, requestErrors, unknownErrors } = require('./serverErrors')
 
 app.use(express.json()) // This is here because I will forget it later and I'll spend hours stuck
 
@@ -34,5 +34,6 @@ app.post('/*', (req ,res, next) => {
 
 app.use(noEndpointError)
 app.use(requestErrors)
+app.use(unknownErrors)
 
 module.exports = app
