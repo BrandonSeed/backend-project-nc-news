@@ -82,6 +82,25 @@ describe('GET /api/articles/:article_id', () => {
     })
   });
 
+  test('should respond with correct object requested', () => {
+    return request(app)
+    .get('/api/articles/3')
+    .expect(200)
+    .then(({ body: { article }}) => {
+      expect(article).toMatchObject({
+        title: "Eight pug gifs that remind me of mitch",
+        topic: "mitch",
+        author: "icellusedkars",
+        body: "some gifs",
+        created_at: "2020-11-03T09:12:00.000Z",
+        article_img_url:
+          "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
+        article_id: 3,
+        votes: 0
+      })
+    })
+  });
+
   describe('error tests', () => { 
     
     test('should respond with status 404 and msg when a vaild but non-existant id is entered', () => {
