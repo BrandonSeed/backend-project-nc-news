@@ -12,6 +12,16 @@ function requestErrors(err, req, res, next) {
     if (err.code === '22P02') {
         res.status(400).send({msg: 'Bad request'})
     }
+    else if (err.code === '23502') {
+        res.status(400).send({msg: 'Bad request, input invalid'})
+    }
+    else {
+        next(err)
+    }
 }
 
-module.exports = { noEndpointError, requestErrors }
+function unknownErrors(err, req, res, next) {
+    console.log(err)
+}
+
+module.exports = { noEndpointError, requestErrors, unknownErrors }

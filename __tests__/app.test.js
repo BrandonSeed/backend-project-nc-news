@@ -11,10 +11,19 @@ afterAll(() => db.end())
 
 describe('Non-endpoint request', () => {
   
-  test('should return a status(404) and error message on any atempted endpoint that does not exist', () => {
+  test('should respond with status(404) and error message on any atempted GET endpoints that do not exist', () => {
     
     return request(app)
     .get('/api/notanend')
+    .expect(404)
+    .then(({body: {msg}}) => {
+      expect(msg).toBe('That endpoint does not exist')
+    })
+  });
+
+  test('should respond with status(404) and error message on atemped POST endpoints that do not exist', () => {
+    return request(app)
+    .post('/api/notanend')
     .expect(404)
     .then(({body: {msg}}) => {
       expect(msg).toBe('That endpoint does not exist')
@@ -220,3 +229,93 @@ describe('GET /api/articles/:article_id/comments', () => {
     });
   });
 });
+
+describe('POST /api/articles/:article_id/comments', () => {
+  test('should repond with status 201 and posted comment object when a username and body are entered', () => {
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send({
+      username: 'lurker',
+      body: 'first comment here'
+    })
+    .expect(201)
+    .then(({ body: { comment }}) => {
+      expect(comment).toHaveProperty("comment_id")
+      expect(comment).toHaveProperty("votes")
+      expect(comment).toHaveProperty("created_at")
+      expect(comment).toHaveProperty("author")
+      expect(comment).toHaveProperty("body")
+      expect(comment).toHaveProperty("article_id")
+
+      expect(comment).toMatchObject({
+        comment_id: expect.any(Number),
+        votes: expect.any(Number),
+        created_at: expect.any(String),
+        author: expect.any(String),
+        body: expect.any(String),
+        article_id: expect.any(Number)
+        })
+    })
+  });
+
+  test('should respond with the correct comment object', () => {
+    return request(app)
+    .post('/api/articles/4/comments')
+    .send({
+      username: 'lurker',
+      body: 'first comment here'
+    })
+    .expect(201)
+    .then(({ body: { comment }}) => {
+      expect(comment).toMatchObject({
+        author: 'lurker',
+        body: 'first comment here',
+        article_id: 4,
+        comment_id: 19,
+        votes: 0,
+        created_at: expect.any(String),
+      })
+    })
+  });
+
+  describe('error tests', () => {
+    test('should repond with status 400 and msg when a non-vaild id is entered', () => {
+      return request(app)
+      .post('/api/articles/notAnId/comments')
+      .send({
+        username: 'lurker',
+        body: 'first comment here'
+      })
+      .expect(400)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("Bad request")
+      })
+    });
+
+    test('should respond with status 404 and msg when a valid non-existant id is entered', () => {
+      return request(app)
+      .post('/api/articles/999/comments')
+      .send({
+        username: 'lurker',
+        body: 'first comment here'
+      })
+      .expect(404)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("That ID has no article")
+      })
+    });
+
+    test('should respond with status 400 and msg when input is invalid', () => {
+      return request(app)
+      .post('/api/articles/4/comments')
+      .send({
+        username: 'lurker',
+      })
+      .expect(400)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("Bad request, input invalid")
+      })
+    });
+  });
+});
+
