@@ -69,8 +69,6 @@ describe('GET /api/topics', () => {
     .then(({ body: { topics } }) => {
       expect(topics).toHaveLength(3)
       topics.forEach((topic) => {
-        expect(topic).toHaveProperty('slug')
-        expect(topic).toHaveProperty('description')
         expect(topic).toMatchObject({
           slug: expect.any(String),
           description: expect.any(String)
@@ -87,15 +85,6 @@ describe('GET /api/articles/:article_id', () => {
     .get('/api/articles/4')
     .expect(200)
     .then(({ body: { article }}) => {
-      expect(article).toHaveProperty('author')
-      expect(article).toHaveProperty('title')
-      expect(article).toHaveProperty('article_id')
-      expect(article).toHaveProperty('body')
-      expect(article).toHaveProperty('topic')
-      expect(article).toHaveProperty('created_at')
-      expect(article).toHaveProperty('votes')
-      expect(article).toHaveProperty('article_img_url')
-
       expect(article).toMatchObject({
         author: expect.any(String),
         title: expect.any(String),
@@ -159,16 +148,6 @@ describe('GET /api/articles', () => {
     .then(({ body: { articles }}) => {
       expect(articles).toHaveLength(13)
       articles.forEach((article) => {
-
-        expect(article).toHaveProperty('author')
-        expect(article).toHaveProperty('title')
-        expect(article).toHaveProperty('article_id')
-        expect(article).toHaveProperty('topic')
-        expect(article).toHaveProperty('created_at')
-        expect(article).toHaveProperty('votes')
-        expect(article).toHaveProperty('article_img_url')
-        expect(article).toHaveProperty('comment_count')
-
         expect(article).toMatchObject({
           author: expect.any(String),
           title: expect.any(String),
@@ -195,14 +174,6 @@ describe('GET /api/articles/:article_id/comments', () => {
     .then(({ body: { comments }}) => {
       expect(comments).toHaveLength(11)
       comments.forEach((comment) => {
-
-        expect(comment).toHaveProperty("comment_id")
-        expect(comment).toHaveProperty("votes")
-        expect(comment).toHaveProperty("created_at")
-        expect(comment).toHaveProperty("author")
-        expect(comment).toHaveProperty("body")
-        expect(comment).toHaveProperty("article_id")
-
         expect(comment).toMatchObject({
           comment_id: expect.any(Number),
           votes: expect.any(Number),
@@ -258,13 +229,6 @@ describe('POST /api/articles/:article_id/comments', () => {
     })
     .expect(201)
     .then(({ body: { comment }}) => {
-      expect(comment).toHaveProperty("comment_id")
-      expect(comment).toHaveProperty("votes")
-      expect(comment).toHaveProperty("created_at")
-      expect(comment).toHaveProperty("author")
-      expect(comment).toHaveProperty("body")
-      expect(comment).toHaveProperty("article_id")
-
       expect(comment).toMatchObject({
         author: 'lurker',
         body: 'first comment here',
@@ -337,15 +301,6 @@ describe('PATCH /api/articles/:article_id', () => {
     .send({ inc_votes: 20})
     .expect(200)
     .then(({ body: { article }}) => {
-
-      expect(article).toHaveProperty('author')
-        expect(article).toHaveProperty('title')
-        expect(article).toHaveProperty('article_id')
-        expect(article).toHaveProperty('topic')
-        expect(article).toHaveProperty('created_at')
-        expect(article).toHaveProperty('votes')
-        expect(article).toHaveProperty('article_img_url')
-
         expect(article).toMatchObject({
           author: expect.any(String),
           title: expect.any(String),
@@ -440,5 +395,11 @@ describe('DELETE /api/comments/:comment_id', () => {
     return request(app)
     .delete('/api/comments/5')
     .expect(204)
+  });
+
+  describe('error tests', () => {
+    test('should respond', () => {
+      
+    });
   });
 });
