@@ -316,6 +316,19 @@ describe('POST /api/articles/:article_id/comments', () => {
         expect(msg).toBe("Bad request, input invalid")
       })
     });
+
+    test('should respond with status 400 and msg on input invaild username', () => {
+      return request(app)
+      .post('/api/articles/4/comments')
+      .send({
+        username: 'marine',
+        body: 'first comment here'
+      })
+      .expect(400)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("Bad request, input invalid")
+      })
+    });
   });
 });
 
