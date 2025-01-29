@@ -7,7 +7,8 @@ const {
     getArticles,
     getCommentsByArticleId, 
     postCommentByArticleId, 
-    patchArticleById
+    patchArticleById,
+    deleteCommentById
 } = require('./contollers/index')
 const { noEndpointError, requestErrors, unknownErrors } = require('./serverErrors')
 
@@ -28,6 +29,8 @@ app.post('/api/articles/:article_id/comments', postCommentByArticleId)
 
 app.patch('/api/articles/:article_id', patchArticleById)
 
+app.delete('/api/comments/:comment_id', deleteCommentById)
+
 app.get('/*', (req ,res, next) => {
     next({status: 404, msg: "That endpoint does not exist"})
 })
@@ -35,6 +38,9 @@ app.post('/*', (req ,res, next) => {
     next({status: 404, msg: "That endpoint does not exist"})
 })
 app.patch('/*', (req ,res, next) => {
+    next({status: 404, msg: "That endpoint does not exist"})
+})
+app.delete('/*', (req ,res, next) => {
     next({status: 404, msg: "That endpoint does not exist"})
 })
 

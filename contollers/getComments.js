@@ -1,3 +1,4 @@
+const deleteCommentPSQL = require('../models/deleteCommentPSQL')
 const { fetchCommentsByArticleId } = require('../models/fetchComments')
 const { insertCommentsByArticleId } = require('../models/insertComments')
 
@@ -26,4 +27,12 @@ function postCommentByArticleId(req, res, next) {
     })
 }
 
-module.exports = { getCommentsByArticleId, postCommentByArticleId }
+function deleteCommentById(req, res, next) {
+    const commentId = req.params.comment_id
+    deleteCommentPSQL(commentId)
+    .then(() => {
+        res.status(204).send()
+    })
+}
+
+module.exports = { getCommentsByArticleId, postCommentByArticleId, deleteCommentById }
