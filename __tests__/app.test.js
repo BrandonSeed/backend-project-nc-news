@@ -38,6 +38,15 @@ describe('Non-endpoint request', () => {
       expect(msg).toBe('That endpoint does not exist')
     })
   });
+
+  test('should respond with status(404) and error message on atempted Delete endpoint that do not exist', () => {
+    return request(app)
+    .delete('/api/notanend')
+    .expect(404)
+    .then(({body: {msg}}) => {
+      expect(msg).toBe('That endpoint does not exist')
+    })
+  });
 });
 
 describe("GET /api", () => {
@@ -423,5 +432,13 @@ describe('PATCH /api/articles/:article_id', () => {
       expect(msg).toBe('Bad request, input invalid')
     })
   });
+  });
+});
+
+describe('DELETE /api/comments/:comment_id', () => {
+  test('should respond with status 204 when comment deleted', () => {
+    return request(app)
+    .delete('/api/comments/5')
+    .expect(204)
   });
 });
