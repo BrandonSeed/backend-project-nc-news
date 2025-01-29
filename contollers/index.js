@@ -1,6 +1,6 @@
 const getApi = require('./getApi')
 const getTopics = require('./getTopics')
-const { getArticleById, getArticles } = require('./getArticles')
+const { getArticleById, getArticles, patchArticleById } = require('./getArticles')
 const { getCommentsByArticleId, postCommentByArticleId } = require('./getComments')
 
 
@@ -11,4 +11,6 @@ module.exports =
     getArticleById, 
     getArticles, 
     getCommentsByArticleId, 
-    postCommentByArticleId }
+    postCommentByArticleId,
+    patchArticleById
+ }
