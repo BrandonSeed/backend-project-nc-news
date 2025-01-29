@@ -8,7 +8,8 @@ const {
     getCommentsByArticleId, 
     postCommentByArticleId, 
     patchArticleById,
-    deleteCommentById
+    deleteCommentById,
+    getUsers,
 } = require('./contollers/index')
 const { noEndpointError, requestErrors, unknownErrors } = require('./serverErrors')
 
@@ -18,6 +19,8 @@ app.use(express.json()) // This is here because I will forget it later and I'll 
 app.get('/api', getApi)
 
 app.get('/api/topics', getTopics)
+
+app.get('/api/users', getUsers)
 
 app.get('/api/articles/:article_id', getArticleById)
 
