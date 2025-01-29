@@ -21,7 +21,6 @@ function requestErrors(err, req, res, next) {
 }
 
 function unknownErrors(err, req, res, next) {
-    console.log(err)
     res.status(400).send({msg: `Error code: ${err.code}, Errror detail: ${err.detail}`})
 }
 
