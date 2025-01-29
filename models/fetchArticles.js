@@ -16,7 +16,23 @@ function fetchArticlesById(articleId) {
     })
 }
 
-function fetchArticles() {
+function fetchArticles(queries) {
+    const sort_by = queries.sort_by || 'created_at'
+    const order = queries.order || 'DESC'
+    const allowedSorts = ['author', 'title', 'topic', 'created_at', 'votes', 'comment_count', 'article_id', 'article_img_id']
+    const allowedOrders = ['ASC', 'DESC']
+    if (!allowedSorts.includes(sort_by)) {
+        return Promise.reject({
+            status: 404,
+            msg: 'Invalid sort input'
+        })
+    }
+    if (!allowedOrders.includes(order.toUpperCase())) {
+        return Promise.reject({
+            status: 404,
+            msg: 'Invalid order input'
+        })
+    }
     return db.query(`SELECT articles.article_id, 
         articles.author, 
         articles.title, 
@@ -28,8 +44,11 @@ function fetchArticles() {
         LEFT JOIN comments
         ON comments.article_id = articles.article_id
         GROUP BY articles.article_id
-        ORDER BY created_at DESC`)
+        ORDER BY ${sort_by} ${order}`)
     .then((result) => {
+        result.rows.forEach((article) => {
+            article.comment_count = Number(article.comment_count)
+        })
         return result.rows
     })
 }
