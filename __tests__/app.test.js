@@ -395,11 +395,30 @@ describe('DELETE /api/comments/:comment_id', () => {
     return request(app)
     .delete('/api/comments/5')
     .expect(204)
+    .then(() => {
+      return request(app)
+      .delete('/api/comments/5')
+      .expect(404)
+    })
   });
 
   describe('error tests', () => {
-    test('should respond', () => {
-      
+    test('should respond with status 400 and msg when a non-valid id is entered', () => {
+      return request(app)
+      .delete('/api/comments/notAnId')
+      .expect(400)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe('Bad request')
+      })
+    });
+
+    test('should respond with status 404 and msg when valid non-existant id is entered', () => {
+      return request(app)
+      .delete('/api/comments/999')
+      .expect(404)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe('That ID has no comment')
+      })
     });
   });
 });
