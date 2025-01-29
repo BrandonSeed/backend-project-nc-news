@@ -29,6 +29,15 @@ describe('Non-endpoint request', () => {
       expect(msg).toBe('That endpoint does not exist')
     })
   });
+
+  test('should respond with status(404) and error message on atempted PATCH endpoint that do not exist', () => {
+    return request(app)
+    .patch('/api/notanend')
+    .expect(404)
+    .then(({body: {msg}}) => {
+      expect(msg).toBe('That endpoint does not exist')
+    })
+  });
 });
 
 describe("GET /api", () => {

@@ -31,6 +31,9 @@ app.get('/*', (req ,res, next) => {
 app.post('/*', (req ,res, next) => {
     next({status: 404, msg: "That endpoint does not exist"})
 })
+app.patch('/*', (req ,res, next) => {
+    next({status: 404, msg: "That endpoint does not exist"})
+})
 
 app.use(noEndpointError)
 app.use(requestErrors)
