@@ -404,4 +404,44 @@ describe('PATCH /api/articles/:article_id', () => {
       })
     })
   });
+
+  describe('error tests', () => {
+    
+  test('should respond with status 400 and msg when a non-valid id is entered', () => {
+    return request(app)
+    .patch('/api/articles/notAnId')
+    .send({ inc_votes: -100})
+    .expect(400)
+    .then(({ body: { msg }}) => {
+      expect(msg).toBe('Bad request')
+    })
+  });
+  test('should respond with status 404 and msg when a valid non-existant id is entered', () => {
+    return request(app)
+    .patch('/api/articles/999')
+    .send({ inc_votes: -100})
+    .expect(404)
+    .then(({ body: { msg }}) => {
+      expect(msg).toBe('That ID has no article')
+    })
+  });
+  test('should repond with status 422 and msg when change in votes is 0', () => {
+    return request(app)
+    .patch('/api/articles/2')
+    .send({ inc_votes: 0})
+    .expect(422)
+    .then(({ body: { msg }}) => {
+      expect(msg).toBe('No change in votes')
+    })
+  });
+  test('should respond with status 400 and msg when input object does not have only inc_votes', () => {
+    return request(app)
+    .patch('/api/articles/2')
+    .send({ inc_vtes: 20})
+    .expect(400)
+    .then(({ body: { msg }}) => {
+      expect(msg).toBe('Bad request, input invalid')
+    })
+  });
+  });
 });
