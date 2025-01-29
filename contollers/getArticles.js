@@ -14,9 +14,12 @@ function getArticleById(req, res, next) {
 }
 
 function getArticles(req, res, next) {
-    fetchArticles()
+    fetchArticles(req.query)
     .then((articles) => {
         res.status(200).send({articles})
+    })
+    .catch((err) => {
+        next(err)
     })
 }
 
