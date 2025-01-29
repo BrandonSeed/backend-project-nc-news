@@ -240,7 +240,7 @@ describe('GET /api/articles/:article_id/comments', () => {
 });
 
 describe('POST /api/articles/:article_id/comments', () => {
-  test('should repond with status 201 and posted comment object when a username and body are entered', () => {
+  test('should repond with status 201 and correct posted comment object when a username and body are entered', () => {
     return request(app)
     .post('/api/articles/4/comments')
     .send({
@@ -256,26 +256,6 @@ describe('POST /api/articles/:article_id/comments', () => {
       expect(comment).toHaveProperty("body")
       expect(comment).toHaveProperty("article_id")
 
-      expect(comment).toMatchObject({
-        comment_id: expect.any(Number),
-        votes: expect.any(Number),
-        created_at: expect.any(String),
-        author: expect.any(String),
-        body: expect.any(String),
-        article_id: expect.any(Number)
-        })
-    })
-  });
-
-  test('should respond with the correct comment object', () => {
-    return request(app)
-    .post('/api/articles/4/comments')
-    .send({
-      username: 'lurker',
-      body: 'first comment here'
-    })
-    .expect(201)
-    .then(({ body: { comment }}) => {
       expect(comment).toMatchObject({
         author: 'lurker',
         body: 'first comment here',
