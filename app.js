@@ -13,7 +13,7 @@ const {
 } = require('./contollers/index')
 const { noEndpointError, requestErrors, unknownErrors } = require('./serverErrors')
 
-app.use(express.json()) // This is here because I will forget it later and I'll spend hours stuck
+app.use(express.json())
 
 
 app.get('/api', getApi)
