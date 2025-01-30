@@ -1,8 +1,13 @@
 const db = require('../db/connection')
 
 function fetchArticlesById(articleId) {
-    return db.query(`SELECT * FROM articles 
-        WHERE article_id = $1`, [articleId])
+    return db.query(`
+        SELECT articles.*, COUNT(comment_id) AS comment_count
+        FROM articles 
+        LEFT JOIN comments 
+        ON comments.article_id = articles.article_id
+        WHERE articles.article_id = $1
+        GROUP BY articles.article_id`, [articleId])
     .then((result) => {
         if (result.rows.length === 0) {
             return Promise.reject({
@@ -11,6 +16,7 @@ function fetchArticlesById(articleId) {
             })
         }
         else {
+            result.rows[0].comment_count = Number(result.rows[0].comment_count)
             return result.rows[0]
         }
     })
