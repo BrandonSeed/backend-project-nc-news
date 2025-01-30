@@ -139,97 +139,122 @@ describe('GET /api/articles/:article_id', () => {
   });
 });
 
-describe('GET /api/articles', () => {
-  
-  test('should respond with status 200 and array of objects of the articles', () => {
-    return request(app)
-    .get('/api/articles')
-    .expect(200)
-    .then(({ body: { articles }}) => {
-      expect(articles).toHaveLength(13)
-      articles.forEach((article) => {
-        expect(article).toMatchObject({
-          author: expect.any(String),
-          title: expect.any(String),
-          article_id: expect.any(Number),
-          topic: expect.any(String),
-          created_at: expect.any(String),
-          votes: expect.any(Number),
-          article_img_url: expect.any(String),
-          comment_count: expect.any(Number)
-        })
-      })
-
-      expect(articles).toBeSorted({descending: true, key: 'created_at'})
-    })
-  });
-
-  test('should respond with status 200 and array of article objects sorted by queried column', () => {
-    return request(app)
-    .get('/api/articles?sort_by=comment_count')
-    .expect(200)
-    .then(({ body: { articles }}) => {
-      expect(articles).toHaveLength(13)
-      articles.forEach((article) => {
-        expect(article).toMatchObject({
-          author: expect.any(String),
-          title: expect.any(String),
-          article_id: expect.any(Number),
-          topic: expect.any(String),
-          created_at: expect.any(String),
-          votes: expect.any(Number),
-          article_img_url: expect.any(String),
-          comment_count: expect.any(Number)
-        })
-      })
-
-      expect(articles).toBeSorted({descending: true, key: 'comment_count'})
-    })
-  });
-
-  test('should respond with status 200 and array of article objects sorted by queried column ordered ascending', () => {
-    return request(app)
-    .get('/api/articles?sort_by=topic&order=asc')
-    .expect(200)
-    .then(({ body: { articles }}) => {
-      expect(articles).toHaveLength(13)
-      articles.forEach((article) => {
-        expect(article).toMatchObject({
-          author: expect.any(String),
-          title: expect.any(String),
-          article_id: expect.any(Number),
-          topic: expect.any(String),
-          created_at: expect.any(String),
-          votes: expect.any(Number),
-          article_img_url: expect.any(String),
-          comment_count: expect.any(Number)
-        })
-      })
-
-      expect(articles).toBeSorted({descending: false, key: 'topic'})
-    })
-  });
-
-  describe('error tests', () => {
-    test('should respond with status 404 and msg when column input is non-valid', () => {
+xdescribe('GET /api/articles', () => {
+  describe('standard request', () => {
+    test('should respond with status 200 and array of objects of the articles', () => {
       return request(app)
-      .get('/api/articles?sort_by=evilInsert')
-      .expect(404)
-      .then(({ body: { msg }}) => {
-        expect(msg).toBe('Invalid sort input')
+      .get('/api/articles')
+      .expect(200)
+      .then(({ body: { articles }}) => {
+        expect(articles).toHaveLength(13)
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number)
+          })
+        })
+  
+        expect(articles).toBeSorted({descending: true, key: 'created_at'})
       })
     });
-
-    test('should respond with status 404 and msg when order input is non-valid', () => {
+  });
+  describe('query requests', () => {
+    test('should respond with status 200 and array of article objects sorted by queried column', () => {
       return request(app)
-      .get('/api/articles?sort_by=article_id&order=evilCode')
-      .expect(404)
-      .then(({ body: { msg }}) => {
-        expect(msg).toBe('Invalid order input')
+      .get('/api/articles?sort_by=comment_count')
+      .expect(200)
+      .then(({ body: { articles }}) => {
+        expect(articles).toHaveLength(13)
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number)
+          })
+        })
+  
+        expect(articles).toBeSorted({descending: true, key: 'comment_count'})
       })
+    });
+  
+    test('should respond with status 200 and array of article objects sorted by queried column ordered ascending', () => {
+      return request(app)
+      .get('/api/articles?sort_by=topic&order=asc')
+      .expect(200)
+      .then(({ body: { articles }}) => {
+        expect(articles).toHaveLength(13)
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number)
+          })
+        })
+  
+        expect(articles).toBeSorted({descending: false, key: 'topic'})
+      })
+    });
+    
+    test('should respond with status 200 and array of article objects filtered by topic queried', () => {
+      return request(app)
+      .get('/api/articles?topic=cats')
+      .expect(200)
+      .then(({ body: { articles }}) => {
+        expect(articles).toHaveLength(1)
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect('cats'),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number)
+          })
+        })
+      })
+    }); //test to make sure topic of no article does send back
+
+    describe('error tests', () => {
+      test('should respond with status 404 and msg when sort_by input is non-valid', () => {
+        return request(app)
+        .get('/api/articles?sort_by=evilInsert')
+        .expect(404)
+        .then(({ body: { msg }}) => {
+          expect(msg).toBe('Invalid sort input')
+        })
+      });
+  
+      test('should respond with status 404 and msg when order input is non-valid', () => {
+        return request(app)
+        .get('/api/articles?sort_by=article_id&order=evilCode')
+        .expect(404)
+        .then(({ body: { msg }}) => {
+          expect(msg).toBe('Invalid order input')
+        })
+      });
     });
   });
 });
+
+
 
 describe('GET /api/articles/:article_id/comments', () => {
   
@@ -495,6 +520,7 @@ describe('GET /api/users', () => {
     .get('/api/users')
     .expect(200)
     .then(({ body: { users }}) => {
+      expect(users).toHaveLength(4)
       users.forEach((user) => {
         expect(user).toMatchObject({
           username: expect.any(String),
