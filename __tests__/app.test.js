@@ -139,7 +139,7 @@ describe('GET /api/articles/:article_id', () => {
   });
 });
 
-describe('GET /api/articles', () => {
+describe.only('GET /api/articles', () => {
   describe('standard request', () => {
     test('should respond with status 200 and array of objects of the articles', () => {
       return request(app)
@@ -185,6 +185,29 @@ describe('GET /api/articles', () => {
         })
   
         expect(articles).toBeSorted({descending: true, key: 'comment_count'})
+      })
+    });
+
+    test('should respond with status 200 and array of article objects ordered ascending', () => {
+      return request(app)
+      .get('/api/articles?order=asc')
+      .expect(200)
+      .then(({ body: { articles }}) => {
+        expect(articles).toHaveLength(13)
+        articles.forEach((article) => {
+          expect(article).toMatchObject({
+            author: expect.any(String),
+            title: expect.any(String),
+            article_id: expect.any(Number),
+            topic: expect.any(String),
+            created_at: expect.any(String),
+            votes: expect.any(Number),
+            article_img_url: expect.any(String),
+            comment_count: expect.any(Number)
+          })
+        })
+  
+        expect(articles).toBeSorted({descending: false, key: 'created_at'})
       })
     });
   
