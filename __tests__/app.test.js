@@ -253,7 +253,16 @@ describe.only('GET /api/articles', () => {
           })
         })
       })
-    }); //test to make sure topic of no article does send back
+    }); 
+
+    test('should respond with status 200 and an empty array if filtered by topic queried and there is no articles of that topic', () => {
+      return request(app)
+      .get('/api/articles?topic=paper')
+      .expect(200)
+      .then(({ body: { articles }}) => {
+        expect(articles).toHaveLength(0)
+      })
+    }); 
 
     describe('error tests', () => {
       test('should respond with status 404 and msg when sort_by input is non-valid', () => {
@@ -267,10 +276,19 @@ describe.only('GET /api/articles', () => {
   
       test('should respond with status 404 and msg when order input is non-valid', () => {
         return request(app)
-        .get('/api/articles?sort_by=article_id&order=evilCode')
+        .get('/api/articles?order=evilCode')
         .expect(404)
         .then(({ body: { msg }}) => {
           expect(msg).toBe('Invalid order input')
+        })
+      });
+      //really unsure on this, so when checked please comment
+      xtest('should respond with status 404 and msg when topic input is non-valid', () => {
+        return request(app)
+        .get('/api/articles?topic=evilpsqlCode')
+        .expect(404)
+        .then(({ body: { msg }}) => {
+          expect(msg).toBe('Invalid topic input')
         })
       });
     });
