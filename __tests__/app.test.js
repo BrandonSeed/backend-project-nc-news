@@ -139,7 +139,7 @@ describe('GET /api/articles/:article_id', () => {
   });
 });
 
-xdescribe('GET /api/articles', () => {
+describe('GET /api/articles', () => {
   describe('standard request', () => {
     test('should respond with status 200 and array of objects of the articles', () => {
       return request(app)
@@ -222,7 +222,7 @@ xdescribe('GET /api/articles', () => {
             author: expect.any(String),
             title: expect.any(String),
             article_id: expect.any(Number),
-            topic: expect('cats'),
+            topic: 'cats',
             created_at: expect.any(String),
             votes: expect.any(Number),
             article_img_url: expect.any(String),
@@ -253,8 +253,6 @@ xdescribe('GET /api/articles', () => {
     });
   });
 });
-
-
 
 describe('GET /api/articles/:article_id/comments', () => {
   
@@ -460,7 +458,7 @@ describe('PATCH /api/articles/:article_id', () => {
       expect(msg).toBe('That ID has no article')
     })
   });
-  test('should repond with status 422 and msg when change in votes is 0', () => {
+  test('should respond with status 422 and msg when change in votes is 0', () => {
     return request(app)
     .patch('/api/articles/2')
     .send({ inc_votes: 0})
