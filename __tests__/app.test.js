@@ -93,7 +93,8 @@ describe('GET /api/articles/:article_id', () => {
         topic: expect.any(String),
         created_at: expect.any(String),
         votes: expect.any(Number),
-        article_img_url: expect.any(String)
+        article_img_url: expect.any(String),
+        comment_count: expect.any(Number)
       })
     })
   });
@@ -112,7 +113,8 @@ describe('GET /api/articles/:article_id', () => {
         article_img_url:
           "https://images.pexels.com/photos/158651/news-newsletter-newspaper-information-158651.jpeg?w=700&h=700",
         article_id: 3,
-        votes: 0
+        votes: 0,
+        comment_count: 2
       })
     })
   });
@@ -139,7 +141,7 @@ describe('GET /api/articles/:article_id', () => {
   });
 });
 
-describe.only('GET /api/articles', () => {
+describe('GET /api/articles', () => {
   describe('standard request', () => {
     test('should respond with status 200 and array of objects of the articles', () => {
       return request(app)
