@@ -19,6 +19,7 @@ function fetchArticlesById(articleId) {
 function fetchArticles(queries) {
     const sort_by = queries.sort_by || 'created_at'
     const order = queries.order || 'DESC'
+    const queryValue = []
     const allowedSorts = ['author', 'title', 'topic', 'created_at', 'votes', 'comment_count', 'article_id', 'article_img_id']
     const allowedOrders = ['ASC', 'DESC']
     if (!allowedSorts.includes(sort_by)) {
@@ -33,7 +34,9 @@ function fetchArticles(queries) {
             msg: 'Invalid order input'
         })
     }
-    return db.query(`SELECT articles.article_id, 
+    let queryStr = `
+        SELECT 
+        articles.article_id, 
         articles.author, 
         articles.title, 
         articles.topic, 
@@ -42,9 +45,15 @@ function fetchArticles(queries) {
         articles.article_img_url, COUNT(comment_id) AS comment_count
         FROM articles
         LEFT JOIN comments
-        ON comments.article_id = articles.article_id
+        ON comments.article_id = articles.article_id`
+    if (queries.topic) {
+        queryValue.push(queries.topic)
+        queryStr += ` 
+        WHERE articles.topic = $1`
+    }
+    return db.query(`${queryStr} 
         GROUP BY articles.article_id
-        ORDER BY ${sort_by} ${order}`)
+        ORDER BY ${sort_by} ${order}`, queryValue)
     .then((result) => {
         result.rows.forEach((article) => {
             article.comment_count = Number(article.comment_count)
