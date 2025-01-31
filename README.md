@@ -7,8 +7,6 @@ This project is a hosted api with basic social media features such as comments a
 
 Using a GET /api request will provide an overview of all functionality.
 
-The main use of this porject was to develop backend developer skills.
-
 Coding language: Javascript
 
 Minimum Node version: v22.9.0
@@ -18,11 +16,11 @@ Minimum Postgres version: 16.6
 
 Hosted Version 
 
-https://backend-project-nc-news-4tvn.onrender.com
+https://backend-project-nc-news-4tvn.onrender.com/api
 
 ---
 
-Dependcies Install
+Dependencies Install
 
 Running 'npm install' or 'npm i' in the terminal will install all necessary packages to run a non-dev instance of the project.
 
@@ -35,9 +33,12 @@ For a dev instance of the project required to run tests, the following will be n
 
 Environments needed
 
-Environment files are not included in clone, therefor .env files must be set on cloning.
-.env.test --> test environment 
-.env.development --> dev environment
+Environment files are not included in clone, therefore .env files must be set on cloning.
+The following must be in the files:
+.env.test:
+    PGDATABASE = nc_news_test
+.env.development:
+    PGDATABASE = nc_news
 
 ---
 
