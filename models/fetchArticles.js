@@ -1,4 +1,5 @@
 const db = require('../db/connection')
+const fetchTopics = require('./fecthTopics')
 
 function fetchArticlesById(articleId) {
     return db.query(`
@@ -40,26 +41,38 @@ function fetchArticles(queries) {
             msg: 'Invalid order input'
         })
     }
-    let queryStr = `
-        SELECT 
-        articles.article_id, 
-        articles.author, 
-        articles.title, 
-        articles.topic, 
-        articles.created_at, 
-        articles.votes, 
-        articles.article_img_url, COUNT(comment_id) AS comment_count
-        FROM articles
-        LEFT JOIN comments
-        ON comments.article_id = articles.article_id`
-    if (queries.topic) {
-        queryValue.push(queries.topic)
-        queryStr += ` 
-        WHERE articles.topic = $1`
-    }
-    return db.query(`${queryStr} 
-        GROUP BY articles.article_id
-        ORDER BY ${sort_by} ${order}`, queryValue)
+    return fetchTopics()
+    .then((topics) => {
+        const allowedTopics = topics.map((topic) => {
+            return topic.slug
+        })
+        if (queries.topic && !allowedTopics.includes(queries.topic)) {
+            return Promise.reject({
+                status: 404,
+                msg: 'Invalid topic input'
+            })
+        }
+        let queryStr = `
+            SELECT 
+            articles.article_id, 
+            articles.author, 
+            articles.title, 
+            articles.topic, 
+            articles.created_at, 
+            articles.votes, 
+            articles.article_img_url, COUNT(comment_id) AS comment_count
+            FROM articles
+            LEFT JOIN comments
+            ON comments.article_id = articles.article_id`
+        if (queries.topic) {
+            queryValue.push(queries.topic)
+            queryStr += ` 
+            WHERE articles.topic = $1`
+        }
+        return db.query(`${queryStr} 
+            GROUP BY articles.article_id
+            ORDER BY ${sort_by} ${order}`, queryValue)
+    })
     .then((result) => {
         result.rows.forEach((article) => {
             article.comment_count = Number(article.comment_count)
