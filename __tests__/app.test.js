@@ -284,8 +284,7 @@ describe('GET /api/articles', () => {
           expect(msg).toBe('Invalid order input')
         })
       });
-      //really unsure on this, so when checked please comment
-      xtest('should respond with status 404 and msg when topic input is non-valid', () => {
+      test('should respond with status 404 and msg when topic input is non-valid', () => {
         return request(app)
         .get('/api/articles?topic=evilpsqlCode')
         .expect(404)
