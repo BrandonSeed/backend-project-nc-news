@@ -585,4 +585,15 @@ describe('GET /api/user/:username', () => {
       })
     })
   });
+
+  describe('error tests', () => {
+    test('should respond with status 404 and msg when a non-existant username is entered', () => {
+      return request(app)
+      .get('/api/users/xXxkillaxXx')
+      .expect(404)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("No user by that username")
+      })
+    });
+  });
 });
