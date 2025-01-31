@@ -7,7 +7,7 @@ const {
     getUsers,
 } = require('./contollers/index')
 const { noEndpointError, requestErrors, unknownErrors } = require('./serverErrors')
-const { articleRouter } = require('./routers/index')
+const { articleRouter, userRouter } = require('./routers/index')
 
 
 app.use(express.json())
@@ -17,7 +17,7 @@ app.get('/api', getApi)
 
 app.get('/api/topics', getTopics)
 
-app.get('/api/users', getUsers)
+app.use('/api/users', userRouter)
 
 app.use('/api/articles', articleRouter)
 

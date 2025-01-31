@@ -571,3 +571,29 @@ describe('GET /api/users', () => {
     })
   });
 });
+
+describe('GET /api/user/:username', () => {
+  test('should respond with status 200 and user object of queried username', () => {
+    return request(app)
+    .get('/api/users/rogersop')
+    .expect(200)
+    .then(({ body: { user }}) => {
+      expect(user).toMatchObject({
+        username: 'rogersop',
+        name: 'paul',
+        avatar_url: 'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4'
+      })
+    })
+  });
+
+  describe('error tests', () => {
+    test('should respond with status 404 and msg when a non-existant username is entered', () => {
+      return request(app)
+      .get('/api/users/xXxkillaxXx')
+      .expect(404)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("No user by that username")
+      })
+    });
+  });
+});

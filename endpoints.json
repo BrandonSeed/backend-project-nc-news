@@ -95,7 +95,7 @@
     "exampleResponse": "Status 204"
   },
   "GET /api/users": {
-    "deliberately": "serves an array of all users",
+    "description": "serves an array of all users",
     "queries": [],
     "exampleResponse": {
       "users": [{
@@ -103,6 +103,17 @@
         "name": "jonny",
         "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
       }]
+    }
+  },
+  "GET /api/users/:username": {
+    "description": "serves a user object based on an input username",
+    "quires": [],
+    "exampleResponse": {
+      "user": {
+        "username": "rogersop",
+        "name": "paul",
+        "avatar_url": "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4"
+      }
     }
   }
 }
