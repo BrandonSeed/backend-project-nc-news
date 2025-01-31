@@ -571,3 +571,18 @@ describe('GET /api/users', () => {
     })
   });
 });
+
+describe('GET /api/user/:username', () => {
+  test('should respond with status 200 and user object of queried username', () => {
+    return request(app)
+    .get('/api/users/rogersop')
+    .expect(200)
+    .then(({ body: { user }}) => {
+      expect(user).toMatchObject({
+        username: 'rogersop',
+        name: 'paul',
+        avatar_url: 'https://avatars2.githubusercontent.com/u/24394918?s=400&v=4'
+      })
+    })
+  });
+});
