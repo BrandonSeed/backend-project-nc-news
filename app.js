@@ -8,7 +8,9 @@ const {
 } = require('./contollers/index')
 const { noEndpointError, requestErrors, unknownErrors } = require('./serverErrors')
 const { articleRouter, userRouter } = require('./routers/index')
+const cors = require('cors')
 
+app.use(cors())
 
 app.use(express.json())
 
