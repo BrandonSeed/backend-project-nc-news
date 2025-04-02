@@ -1,4 +1,5 @@
 const { fetchArticlesById, fetchArticles } = require("../models/fetchArticles")
+const insertArticle = require("../models/insertArticle")
 const updateArticle = require("../models/updateArticle")
 
 
@@ -40,4 +41,15 @@ function patchArticleById(req, res, next) {
     })
 }
 
-module.exports = { getArticleById, getArticles, patchArticleById }
+function postArticle(req, res, next) {
+    insertArticle(req.body)
+    .then((article) => {
+        console.log(article)
+        res.status(201).send({article})
+    })
+    .catch((err) => {
+        next(err)
+    })
+}
+
+module.exports = { getArticleById, getArticles, patchArticleById, postArticle }
