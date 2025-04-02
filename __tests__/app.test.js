@@ -597,3 +597,65 @@ describe('GET /api/user/:username', () => {
     });
   });
 });
+
+describe('POST /api/articles', () => {
+  //invalid no title
+  //invalid no body
+  //invalid no topic 
+  //non existant topic
+  //still work with no img url given
+  test('should respond with status 201 and correct posted article when all inputs are valid', () => {
+    return request(app)
+    .post('/api/articles')
+    .send({
+      author: 'lurker',
+      title: 'how to lurk and all things hidden',
+      body: 'Begin by not typing in chat ever',
+      topic: 'mitch',
+      article_img_url: "https://merriam-webster.com/assets/ld/word_of_the_day/images/4967/large.jpg" 
+    })
+    .expect(201)
+    .then(({ body: {article} }) => {
+      expect(article).toMatchObject({
+        author: 'lurker',
+        title: 'how to lurk and all things hidden',
+        body: 'Begin by not typing in chat ever',
+        topic: 'mitch',
+        article_img_url: "https://merriam-webster.com/assets/ld/word_of_the_day/images/4967/large.jpg",
+        article_id: 14,
+        votes: 0,
+        created_at: expect.any(String),
+        comment_count: 0
+      })
+    })
+  });
+
+  test('should respond with status 201 and correct posted article when all inputs are valid but without image', () => {
+    return request(app)
+    .post('/api/articles')
+    .send({
+      author: 'lurker',
+      title: 'how to lurk and all things hidden',
+      body: 'Begin by not typing in chat ever',
+      topic: 'mitch',
+    })
+    .expect(201)
+    .then(({ body: {article} }) => {
+      expect(article).toMatchObject({
+        author: 'lurker',
+        title: 'how to lurk and all things hidden',
+        body: 'Begin by not typing in chat ever',
+        topic: 'mitch',
+        article_img_url: "https://c8.alamy.com/comp/E9WHM2/3d-render-of-a-little-person-looking-at-a-question-mark-symbol-through-E9WHM2.jpg",
+        article_id: 14,
+        votes: 0,
+        created_at: expect.any(String),
+        comment_count: 0
+      })
+    })
+  });
+
+  describe('error tests', () => {
+    
+  });
+});
