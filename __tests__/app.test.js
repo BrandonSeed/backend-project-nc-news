@@ -599,11 +599,6 @@ describe('GET /api/user/:username', () => {
 });
 
 describe('POST /api/articles', () => {
-  //invalid no title
-  //invalid no body
-  //invalid no topic 
-  //non existant topic
-  //still work with no img url given
   test('should respond with status 201 and correct posted article when all inputs are valid', () => {
     return request(app)
     .post('/api/articles')
@@ -656,6 +651,81 @@ describe('POST /api/articles', () => {
   });
 
   describe('error tests', () => {
-    
+
+    test('should respond with status 400 and msg on no author input', () => {
+      return request(app)
+      .post('/api/articles')
+      .send({
+        title: 'how to lurk and all things hidden',
+        body: 'Begin by not typing in chat ever',
+        topic: 'mitch',
+        article_img_url: "https://merriam-webster.com/assets/ld/word_of_the_day/images/4967/large.jpg" 
+      })
+      .expect(400)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("Bad request, input invalid")
+      })
+    });
+
+    test('should respond with status 400 and msg on no title input', () => {
+      return request(app)
+      .post('/api/articles')
+      .send({
+        author: 'lurker',
+        body: 'Begin by not typing in chat ever',
+        topic: 'mitch',
+        article_img_url: "https://merriam-webster.com/assets/ld/word_of_the_day/images/4967/large.jpg" 
+      })
+      .expect(400)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("Bad request, input invalid")
+      })
+    });
+
+    test('should respond with status 400 and msg on no body input', () => {
+      return request(app)
+      .post('/api/articles')
+      .send({
+        author: 'lurker',
+        title: 'how to lurk and all things hidden',
+        topic: 'mitch',
+        article_img_url: "https://merriam-webster.com/assets/ld/word_of_the_day/images/4967/large.jpg" 
+      })
+      .expect(400)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("Bad request, input invalid")
+      })
+    });
+
+    test('should respond with status 400 and msg on no topic input', () => {
+      return request(app)
+      .post('/api/articles')
+      .send({
+        author: 'lurker',
+        title: 'how to lurk and all things hidden',
+        body: 'Begin by not typing in chat ever',
+        article_img_url: "https://merriam-webster.com/assets/ld/word_of_the_day/images/4967/large.jpg" 
+      })
+      .expect(400)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe("Bad request, input invalid")
+      })
+    });
+
+    test('should respond with status 404 and msg when a non existant topic is input', () => {
+      return request(app)
+      .post('/api/articles')
+      .send({
+        author: 'lurker',
+        title: 'how to lurk and all things hidden',
+        body: 'Begin by not typing in chat ever',
+        topic: 'pizza',
+        article_img_url: "https://merriam-webster.com/assets/ld/word_of_the_day/images/4967/large.jpg" 
+      })
+      .expect(404)
+      .then(({ body: { msg }}) => {
+        expect(msg).toBe(`That topic doesn't exist`)
+      })
+    });
   });
 });
